@@ -32,8 +32,10 @@ public class Room {
     private Boolean status;
 
     @ManyToOne
-    private User user;
+    @JoinColumn
+    private User host;
 
-    @OneToOne
+    @OneToOne(mappedBy = "room", fetch = FetchType.EAGER)
+    @JoinColumn
     private Booking booking;
 }

@@ -34,4 +34,10 @@ public class User {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    private Booking booking;
+
+    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
+    private Set<Room> hostRooms;
+
 }
