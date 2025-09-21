@@ -35,5 +35,6 @@ public class User {
     private LocalDateTime createdAt;
 
     @OneToMany
+    @JoinColumn
     private Set<Room> rooms = new HashSet<>();
 }
