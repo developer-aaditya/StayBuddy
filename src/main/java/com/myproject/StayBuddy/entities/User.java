@@ -24,6 +24,9 @@ public class User {
     private String email;
     private String password;
     private String contactNo;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @CreationTimestamp
