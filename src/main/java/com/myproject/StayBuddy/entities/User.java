@@ -34,6 +34,4 @@ public class User {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @OneToMany
-    private Set<Room> rooms;
 }
