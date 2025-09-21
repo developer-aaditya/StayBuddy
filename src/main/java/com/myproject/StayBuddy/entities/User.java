@@ -1,5 +1,6 @@
 package com.myproject.StayBuddy.entities;
 
+import com.myproject.StayBuddy.entities.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,7 +24,7 @@ public class User {
     private String email;
     private String password;
     private String contactNo;
-//    private Role role;
+    private Role role;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
