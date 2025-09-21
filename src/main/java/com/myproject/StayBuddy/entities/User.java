@@ -33,7 +33,7 @@ public class User {
 
     @OneToMany
     @JoinColumn
-    private Set<Room> rooms = new HashSet<>();
+    private Set<Room> rooms ;
 
     @OneToMany
     @JoinColumn
