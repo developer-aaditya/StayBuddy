@@ -34,4 +34,8 @@ public class User {
     @OneToMany
     @JoinColumn
     private Set<Room> rooms = new HashSet<>();
+
+    @OneToMany
+    @JoinColumn
+    private Set<Booking> bookings = new HashSet<>();
 }
