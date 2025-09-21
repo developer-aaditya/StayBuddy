@@ -1,5 +1,6 @@
 package com.myproject.StayBuddy.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -33,9 +34,10 @@ public class Room {
 
     @ManyToOne
     @JoinColumn
+    @JsonIgnore
     private User host;
 
-    @OneToOne(mappedBy = "room", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "bookedRoom", fetch = FetchType.EAGER)
     @JoinColumn
-    private Booking booking;
+    private Booking roomBooking;
 }

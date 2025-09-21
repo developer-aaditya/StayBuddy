@@ -15,17 +15,18 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    private User user;
+    @ManyToOne
+    @JoinColumn
+    private User bookedUser;
 
     @OneToOne(cascade = CascadeType.ALL)
-    private Room room;
+    private Room bookedRoom;
 
     private LocalDateTime checkInDate;
 
     private LocalDateTime checkOutDate;
 
-    private Integer total_Price;
+    private Integer totalPrice;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
