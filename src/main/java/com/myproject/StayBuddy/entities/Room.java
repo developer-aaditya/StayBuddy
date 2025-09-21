@@ -3,7 +3,6 @@ package com.myproject.StayBuddy.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.repository.cdi.Eager;
 
 import java.time.LocalDateTime;
 
