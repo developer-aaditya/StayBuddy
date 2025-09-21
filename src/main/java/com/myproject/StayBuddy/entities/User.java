@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -16,11 +17,12 @@ public class User {
     private Long id;
 
     private String name;
+    private LocalDate DOB;
 
     @Column(unique = true)
     private String email;
     private String password;
-    private String mobileNo;
+    private String contactNo;
 //    private Role role;
 
     @CreationTimestamp
