@@ -17,7 +17,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
 
     private String name;
     private LocalDate DOB;
@@ -26,16 +26,12 @@ public class User {
     private String email;
     private String password;
     private String contactNo;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @OneToMany
-    @JoinColumn
-    private Set<Room> rooms ;
-
-    @OneToMany
-    @JoinColumn
-    private Set<Booking> bookings = new HashSet<>();
 }
