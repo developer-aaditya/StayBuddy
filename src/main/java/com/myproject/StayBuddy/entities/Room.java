@@ -1,9 +1,6 @@
 package com.myproject.StayBuddy.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.repository.cdi.Eager;
@@ -15,7 +12,10 @@ import java.time.LocalDateTime;
 public class Room {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String RoomId;
 
     private String title;
 
