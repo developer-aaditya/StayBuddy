@@ -2,6 +2,7 @@ package com.myproject.StayBuddy.services;
 
 import com.myproject.StayBuddy.DTOs.BookingDTO;
 import com.myproject.StayBuddy.entities.Booking;
+import com.myproject.StayBuddy.entities.Room;
 import com.myproject.StayBuddy.entities.User;
 import com.myproject.StayBuddy.exceptions.ResourceNotFoundException;
 import com.myproject.StayBuddy.repositories.BookingRepository;
@@ -22,6 +23,7 @@ public class BookingService {
     private final UserService userService;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final RoomService roomService;
 
     public Booking createBooking(Long userId, Booking booking) {
         userService.isExistById(userId);
@@ -47,12 +49,16 @@ public class BookingService {
     public Booking checkInTime(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow();
         booking.setCheckInDate(LocalDateTime.now());
+        Room bookedRoom = booking.getBookedRoom();
+        roomService.setRoomStatus(bookedRoom.getId());
         return booking;
     }
 
     public Booking checkOutTime(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow();
         booking.setCheckOutDate(LocalDateTime.now());
+        Room bookedRoom = booking.getBookedRoom();
+        roomService.setRoomStatus(bookedRoom.getId());
         return booking;
     }
 
