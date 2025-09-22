@@ -18,11 +18,11 @@ import java.util.Set;
 public class BookingService {
 
     private final BookingRepository bookingRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
     public Booking createBooking(Long userId, Booking booking) {
-        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found by id: " + userId));
+        userService.isExistById(userId);
         return bookingRepository.save(booking);
     }
 
