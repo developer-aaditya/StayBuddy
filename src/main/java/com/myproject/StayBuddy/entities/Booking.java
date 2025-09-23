@@ -15,11 +15,12 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id",nullable = false)
     private User bookedUser;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
+    @JoinColumn(name = "room_id")
     private Room bookedRoom;
 
     private LocalDateTime checkInDate;
@@ -28,7 +29,7 @@ public class Booking {
 
     private Integer totalPrice;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+
     @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus;
 

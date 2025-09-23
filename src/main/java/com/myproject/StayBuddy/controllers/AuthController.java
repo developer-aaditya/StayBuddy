@@ -2,11 +2,10 @@ package com.myproject.StayBuddy.controllers;
 
 import com.myproject.StayBuddy.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/auth")
+@RequestMapping(path = "/user")
 @RequiredArgsConstructor
 public class AuthController {
 

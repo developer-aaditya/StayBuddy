@@ -6,6 +6,7 @@ import com.myproject.StayBuddy.entities.Room;
 import com.myproject.StayBuddy.entities.User;
 import com.myproject.StayBuddy.exceptions.ResourceNotFoundException;
 import com.myproject.StayBuddy.repositories.BookingRepository;
+import com.myproject.StayBuddy.repositories.RoomRepository;
 import com.myproject.StayBuddy.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,49 +23,79 @@ public class BookingService {
 
     private final BookingRepository bookingRepository;
     private final UserService userService;
-    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final RoomService roomService;
+    private final RoomRepository roomRepository;
 
-    public Booking createBooking(Long userId, Booking booking) {
-        userService.isExistById(userId);
-        return bookingRepository.save(booking);
+    public BookingDTO createBooking(Long userId, Long roomId, BookingDTO bookingDTO) {
+
+        User user = userService.getUserOrThrow(userId);
+       Room room = roomService.getRoomOrThrow(roomId);
+
+       if (!room.getIsAvailable()) {
+           throw new IllegalArgumentException("Room is currently not available for booking");
+       }
+
+       Booking booking =  modelMapper.map(bookingDTO, Booking.class);
+       booking.setBookedUser(user);
+       booking.setBookedRoom(room);
+       room.setIsAvailable(false);
+       roomService.toggleRoomAvailability(room.getId());
+
+       Booking savedBooking = bookingRepository.save(booking);
+       return modelMapper.map(savedBooking, BookingDTO.class);
     }
 
-    public List<BookingDTO> checkBookingByUserId(Long userId) {
-        userService.isExistById(userId);
-        User user = userRepository.findById(userId).orElse(null);
-        List<Booking> bookings = bookingRepository.findBookingByBookedUser(user);
-        return bookings.stream()
-                .map(booking -> modelMapper.map(booking, BookingDTO.class))
-                .toList();
+    public List<BookingDTO> getBookingByUserId(Long userId){
+        User user = userService.getUserOrThrow(userId);
+        return bookingRepository.findBookingByBookedUser(user).stream()
+                .map(b -> modelMapper.map(b,BookingDTO.class))
+                .collect(Collectors.toList());
     }
 
-    public BookingDTO findBookingByBookingId(Long bookingId){
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow(
-                () -> new ResourceNotFoundException("Booking not found with id : " +bookingId)
-        );
+    public BookingDTO getBookingById(Long bookingId){
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(()-> new ResourceNotFoundException("Booking not found with id: "+bookingId));
         return modelMapper.map(booking, BookingDTO.class);
     }
 
-    public Booking checkInTime(Long bookingId) {
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow();
+    public BookingDTO checkIn(Long bookingId){
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id: "+bookingId));
         booking.setCheckInDate(LocalDateTime.now());
-        Room bookedRoom = booking.getBookedRoom();
-        roomService.setRoomStatus(bookedRoom.getId());
-        return booking;
+
+        Room room = booking.getBookedRoom();
+        if(room != null && room.getIsAvailable()){
+            room.setIsAvailable(false);
+        }
+
+        Booking savedBooking = bookingRepository.save(booking);
+        return modelMapper.map(savedBooking , BookingDTO.class);
     }
 
-    public Booking checkOutTime(Long bookingId) {
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow();
-        booking.setCheckOutDate(LocalDateTime.now());
-        Room bookedRoom = booking.getBookedRoom();
-        roomService.setRoomStatus(bookedRoom.getId());
-        return booking;
+    public BookingDTO checkOut(Long bookingId){
+            Booking booking= bookingRepository.findById(bookingId)
+                    .orElseThrow(()-> new ResourceNotFoundException("Booking not found with id: "+bookingId));
+            booking.setCheckOutDate(LocalDateTime.now());
+
+            Room room = booking.getBookedRoom();
+            if (room != null){
+                room.setIsAvailable(true);
+            }
+
+            Booking savedBooking = bookingRepository.save(booking);
+            return modelMapper.map(savedBooking , BookingDTO.class);
     }
 
-    public void cancelBookingByBookingId(Long bookingId){
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow();
-        bookingRepository.deleteById(bookingId);
+    public void  cancelBooking(Long bookingId){
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(()-> new ResourceNotFoundException("Booking not found with id: "+bookingId));
+
+        Room room = booking.getBookedRoom();
+        if(room!= null){
+            room.setIsAvailable(true);
+            roomRepository.save(room);
+        }
+        bookingRepository.delete(booking);
     }
 }
