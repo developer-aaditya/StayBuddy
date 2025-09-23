@@ -2,8 +2,7 @@ package com.myproject.StayBuddy.controllers;
 
 import com.myproject.StayBuddy.services.BookingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/booking")

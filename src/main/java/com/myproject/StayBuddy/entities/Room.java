@@ -5,7 +5,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -15,29 +18,32 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String RoomId;
+    @Column(unique = true, nullable = false)
+    private String roomId;
 
     private String title;
-
+    @Column(length = 2000)
     private String description;
 
     private String location;
 
-    private Integer price;
+    private BigDecimal price;
 
     private Integer maxGuests;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    private Boolean status;
+    @CreationTimestamp
+    private LocalDateTime updatedAt;
 
-    @ManyToOne
-    @JoinColumn
+    private Boolean isAvailable;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id",nullable = false)
     @JsonIgnore
     private User host;
 
-    @OneToOne(mappedBy = "bookedRoom", fetch = FetchType.EAGER)
-    @JoinColumn
+    @OneToOne(mappedBy = "bookedRoom")
     private Booking roomBooking;
 }

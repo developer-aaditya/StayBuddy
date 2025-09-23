@@ -1,5 +1,7 @@
-package com.myproject.StayBuddy.entities;
+package com.myproject.StayBuddy.DTOs;
 
+import com.myproject.StayBuddy.entities.Booking;
+import com.myproject.StayBuddy.entities.Room;
 import com.myproject.StayBuddy.entities.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -11,33 +13,25 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Entity
-@Table(name = "users")
-public class User {
+public class UserDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
     private String name;
     private LocalDate dob;
 
-    @Column(unique = true,nullable = false)
+
     private String email;
     private String password;
     private String contactNo;
 
-//    @ElementCollection(fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
     private Role role;
 
-    @CreationTimestamp
+
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "bookedUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Booking> userBookings = new HashSet<>();
 
-    @OneToMany(mappedBy = "host", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<Room> hostRooms = new HashSet<>();
-
 }
