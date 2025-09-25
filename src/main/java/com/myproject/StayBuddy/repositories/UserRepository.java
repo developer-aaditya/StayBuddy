@@ -1,11 +1,13 @@
 package com.myproject.StayBuddy.repositories;
 
-import com.myproject.StayBuddy.entities.Booking;
 import com.myproject.StayBuddy.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    Optional<User> findByEmail(String username);
 }
