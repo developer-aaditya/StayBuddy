@@ -47,4 +47,9 @@ public class RoomService {
         return roomRepository.findById(roomId)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found with id: " + roomId));
     }
+
+    public RoomDTO getRoomById(Long roomId) {
+        Room room = getRoomOrThrow(roomId);
+        return modelMapper.map(room, RoomDTO.class);
+    }
 }
