@@ -7,14 +7,12 @@ import com.myproject.StayBuddy.entities.User;
 import com.myproject.StayBuddy.exceptions.ResourceNotFoundException;
 import com.myproject.StayBuddy.repositories.BookingRepository;
 import com.myproject.StayBuddy.repositories.RoomRepository;
-import com.myproject.StayBuddy.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,22 +26,21 @@ public class BookingService {
     private final RoomRepository roomRepository;
 
     public BookingDTO createBooking(Long userId, Long roomId, BookingDTO bookingDTO) {
-
         User user = userService.getUserOrThrow(userId);
-       Room room = roomService.getRoomOrThrow(roomId);
+        Room room = roomService.getRoomOrThrow(roomId);
 
-       if (!room.getIsAvailable()) {
-           throw new IllegalArgumentException("Room is currently not available for booking");
-       }
+        if (!room.getIsAvailable()) {
+            throw new IllegalArgumentException("Room is currently not available for booking");
+        }
 
-       Booking booking =  modelMapper.map(bookingDTO, Booking.class);
-       booking.setBookedUser(user);
-       booking.setBookedRoom(room);
-       room.setIsAvailable(false);
-       roomService.toggleRoomAvailability(room.getId());
+        Booking booking =  modelMapper.map(bookingDTO, Booking.class);
+        booking.setBookedUser(user);
+        booking.setBookedRoom(room);
+        room.setIsAvailable(false);
+        roomService.toggleRoomAvailability(room.getId());
 
-       Booking savedBooking = bookingRepository.save(booking);
-       return modelMapper.map(savedBooking, BookingDTO.class);
+        Booking savedBooking = bookingRepository.save(booking);
+        return modelMapper.map(savedBooking, BookingDTO.class);
     }
 
     public List<BookingDTO> getBookingByUserId(Long userId){
