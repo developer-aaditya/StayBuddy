@@ -1,6 +1,5 @@
 package com.myproject.StayBuddy.controllers;
 
-import com.myproject.StayBuddy.DTOs.AuthResponseDTO;
 import com.myproject.StayBuddy.DTOs.LoginDTO;
 import com.myproject.StayBuddy.DTOs.SignupDTO;
 import com.myproject.StayBuddy.DTOs.TokenDTO;
@@ -63,7 +62,7 @@ public class AuthController {
                 .map(Cookie::getValue)
                 .orElseThrow(() -> new AuthenticationServiceException("Refresh Token not found inside the cookies."));
         TokenDTO tokenDTO = authService.refresh(refreshToken);
-        return ResponseEntity.ok(tokenDTO.getRefreshToken());
+        return ResponseEntity.ok(tokenDTO.getAccessToken());
     }
 
     @PostMapping("/logout")
