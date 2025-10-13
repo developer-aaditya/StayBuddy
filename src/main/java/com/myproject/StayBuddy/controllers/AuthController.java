@@ -1,5 +1,6 @@
 package com.myproject.StayBuddy.controllers;
 
+import com.myproject.StayBuddy.DTOs.AuthResponseDTO;
 import com.myproject.StayBuddy.DTOs.LoginDTO;
 import com.myproject.StayBuddy.DTOs.SignupDTO;
 import com.myproject.StayBuddy.DTOs.TokenDTO;
@@ -24,7 +25,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signUp(
+    public ResponseEntity<TokenDTO> signUp(
             @RequestBody SignupDTO signupDTO,
             HttpServletResponse response
     ){
@@ -33,11 +34,11 @@ public class AuthController {
         Cookie cookie = new Cookie("refreshToken", refreshToken);
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
-        return ResponseEntity.ok(tokenDTO.getAccessToken());
+        return ResponseEntity.ok(tokenDTO);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(
+    public ResponseEntity<TokenDTO> login(
             @RequestBody LoginDTO loginDTO, HttpServletResponse response
     ){
         TokenDTO tokenDTO = authService.login(loginDTO);
@@ -45,7 +46,7 @@ public class AuthController {
         Cookie cookie = new Cookie("refreshToken", refreshToken);
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
-        return ResponseEntity.ok(tokenDTO.getAccessToken());
+        return ResponseEntity.ok(tokenDTO);
     }
 
     @PostMapping("/refresh")
@@ -62,7 +63,7 @@ public class AuthController {
                 .map(Cookie::getValue)
                 .orElseThrow(() -> new AuthenticationServiceException("Refresh Token not found inside the cookies."));
         TokenDTO tokenDTO = authService.refresh(refreshToken);
-        return ResponseEntity.ok(tokenDTO.getAccessToken());
+        return ResponseEntity.ok(tokenDTO.getRefreshToken());
     }
 
     @PostMapping("/logout")
