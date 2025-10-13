@@ -37,6 +37,7 @@ public class AuthService {
         String accessToken = jwtService.generateAccessToken(savedUser);
         String refreshToken = jwtService.generateRefreshToken(savedUser);
         return TokenDTO.builder()
+                .userId(savedUser.getId())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
@@ -50,6 +51,7 @@ public class AuthService {
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
         return TokenDTO.builder()
+                .userId(user.getId())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
@@ -60,6 +62,7 @@ public class AuthService {
         User user = userService.getUserOrThrow(userId);
         String accessToken = jwtService.generateAccessToken(user);
         return TokenDTO.builder()
+                .userId(user.getId())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
