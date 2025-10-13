@@ -4,6 +4,7 @@ import com.myproject.StayBuddy.DTOs.LoginDTO;
 import com.myproject.StayBuddy.DTOs.SignupDTO;
 import com.myproject.StayBuddy.DTOs.TokenDTO;
 import com.myproject.StayBuddy.entities.User;
+import com.myproject.StayBuddy.entities.enums.Role;
 import com.myproject.StayBuddy.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -26,6 +27,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public TokenDTO signUp(SignupDTO signupDTO) {
+        signupDTO.setRole(Role.USER);
         String email = signupDTO.getEmail();
         User user = userService.getUserByEmail(email);
         if(user != null){
